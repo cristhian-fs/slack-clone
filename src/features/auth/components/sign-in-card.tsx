@@ -1,6 +1,7 @@
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuthActions } from "@convex-dev/auth/react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
@@ -32,6 +33,8 @@ interface SignInCardProps {
 
 export const SignInCard = ({ setState }: SignInCardProps) => {
 
+  const { signIn } = useAuthActions()
+
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -39,6 +42,10 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
       password: "",
     },
   })
+
+  const handleProviderSignIn = (value: "github" | "google") => {
+    signIn(value);
+  }
 
   return (
     <Card className="w-full h-full p-8">
@@ -107,7 +114,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
           </Button>
           <Button
             disabled={false}
-            onClick={() => {}}
+            onClick={() => handleProviderSignIn("github")}
             variant="outline"
             size="lg"
             className="w-full relative"
