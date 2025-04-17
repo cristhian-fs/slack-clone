@@ -1,3 +1,4 @@
+"use client";
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,6 +27,8 @@ import { Separator } from "@/components/ui/separator";
 // types and schemas
 import { SignInFlow } from "../types";
 import { signInSchema } from '../schemas';
+import { useState } from 'react';
+import { TriangleAlert } from 'lucide-react';
 
 interface SignInCardProps {
   setState: (state: SignInFlow) => void
@@ -34,6 +37,8 @@ interface SignInCardProps {
 export const SignInCard = ({ setState }: SignInCardProps) => {
 
   const { signIn } = useAuthActions()
+
+  const [error, setError] = useState<string | undefined>("");
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -46,6 +51,22 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
   const handleProviderSignIn = (value: "github" | "google") => {
     signIn(value);
   }
+
+  const handleCredentialsSignIn = (values: z.infer<typeof signInSchema>) => {
+      
+      const { success } = signInSchema.safeParse(values);
+  
+      if(!success) {
+        setError("Invalid credentials")
+        return
+      }
+  
+      signIn("password", {
+        email: values.email,
+        password: values.password,
+        flow: "signUp"
+      }).catch((error) => setError(error.message))
+    }
 
   return (
     <Card className="w-full h-full p-8">
@@ -61,7 +82,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
         <Form {...form}>
           <form  
             className="space-y-2.5"
-            onSubmit={form.handleSubmit(() => {})}
+            onSubmit={form.handleSubmit(handleCredentialsSignIn)}
           >
             <FormField 
               control={form.control}
@@ -95,6 +116,12 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
                 </FormItem>
               )}
             />
+            {!!error && (
+              <div className="bg-destructive/15 flex items-center justify-start p-3 rounded-md gap-1 text-destructive text-sm">
+                <TriangleAlert className='size-4' />
+                <p>{error}</p>
+              </div>
+            )}
             <Button type="submit" className="w-full" size="lg" disabled={false}>
               Continue
             </Button>

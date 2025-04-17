@@ -1,8 +1,11 @@
+"use client";
+
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { TriangleAlert } from "lucide-react"
 
 // Local components
 import { Form, 
@@ -24,6 +27,8 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { SignInFlow } from "../types"
 import { signUpSchema } from '../schemas';
+import { useAuthActions } from '@convex-dev/auth/react';
+import { useState } from 'react';
 
 interface SignUpCardProps {
   setState: (state: SignInFlow) => void
@@ -31,14 +36,39 @@ interface SignUpCardProps {
 
 export const SignUpCard = ({ setState }: SignUpCardProps) => {
 
+  const [error, setError] = useState<string | undefined>("")
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
     }
   })
+
+  const { signIn } = useAuthActions()
+
+  const handleProviderSignIn = (value: "github" | "google") => {
+    signIn(value);
+  }
+
+  const handleCredentialsSignIn = (values: z.infer<typeof signUpSchema>) => {
+    
+    const { success } = signUpSchema.safeParse(values);
+
+    if(!success) {
+      setError("Invalid credentials")
+      return
+    }
+
+    signIn("password", {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      flow: "signUp"
+    }).catch((error) => setError(error.message))
+  }
 
   return (
     <Card className="w-full h-full p-8">
@@ -54,8 +84,24 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
       <Form {...form}>
           <form  
             className="space-y-2.5"
-            onSubmit={form.handleSubmit(() => {})}
+            onSubmit={form.handleSubmit(handleCredentialsSignIn)}
           >
+            <FormField 
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input 
+                      {...field}
+                      placeholder="Full name"
+                      type="text"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField 
               control={form.control}
               name="email"
@@ -104,6 +150,12 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
                 </FormItem>
               )}
             />
+            {!!error && (
+              <div className="bg-destructive/15 flex items-center justify-start p-3 rounded-md gap-1 text-destructive text-sm">
+                <TriangleAlert className='size-4' />
+                <p>{error}</p>
+              </div>
+            )}
             <Button type="submit" className="w-full" size="lg" disabled={false}>
               Continue
             </Button>
@@ -113,7 +165,7 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
         <div className="flex flex-col gap-y-2.5">
           <Button
             disabled={false}
-            onClick={() => {}}
+            onClick={() => handleProviderSignIn("google")}
             variant="outline"
             size="lg"
             className="w-full relative"
@@ -123,7 +175,7 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
           </Button>
           <Button
             disabled={false}
-            onClick={() => {}}
+            onClick={() => handleProviderSignIn('github')}
             variant="outline"
             size="lg"
             className="w-full relative"
