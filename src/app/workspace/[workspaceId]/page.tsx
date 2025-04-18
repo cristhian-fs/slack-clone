@@ -1,13 +1,9 @@
-interface WorkspacePageProps {
-  params:{
-    workspaceId: string
-  }
-}
+"use client";
 
-const WorkspacePage = ({ params }: WorkspacePageProps) => {
+const WorkspacePage = () => {
   return ( 
     <div>
-      Id: {params.workspaceId}
+      Workspace Id page
     </div>
    );
 }
