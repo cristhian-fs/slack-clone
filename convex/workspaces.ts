@@ -35,6 +35,10 @@ export const create = mutation({
       workspaceId,
       role: "admin",
     })
+    await ctx.db.insert("channels",{
+      name: "General",
+      workspaceId,
+    })
 
     return workspaceId
   }
@@ -162,5 +166,37 @@ export const remove = mutation({
     await ctx.db.delete(args.id)
 
     return args.id
+  }
+})
+
+export const newJoinCode = mutation({
+  args: {
+    workspaceId: v.id("workspaces"),
+  },
+  handler: async (ctx, agrs) => {
+    const userId = await getAuthUserId(ctx);
+
+    if(!userId){
+      throw new Error("Unauthorized");
+    }
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_workspace_id_user_id", (q) => 
+        q.eq("workspaceId", agrs.workspaceId).eq("userId", userId)
+      )
+      .unique();
+    
+    if(!member || member.role !== "admin"){
+      throw new Error("Unauthorized");
+    }
+
+    const joinCode = generateCode();
+
+    await ctx.db.patch(agrs.workspaceId, {
+      joinCode
+    })
+
+    return agrs.workspaceId
   }
 })
