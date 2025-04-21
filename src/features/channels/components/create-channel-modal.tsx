@@ -17,10 +17,12 @@ import { Button } from "@/components/ui/button";
 import { useCreateChannel } from "../api/use-create-channel";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export const CreateChannelModal = () => {
   const [open, setOpen] = useCreateChannelModal();
 
+  const router = useRouter();
   const workspaceId = useWorkspaceId();
   const { mutate, isPending } = useCreateChannel();
   const form = useForm<z.infer<typeof createChannelSchema>>({
@@ -46,10 +48,13 @@ export const CreateChannelModal = () => {
       name: values.name,
       workspaceId
     }, {
-      onSuccess: () => {
-        handleClose();
+      onSuccess: (id) => {
+        router.push(`/workspace/${workspaceId}/channel/${id}`);
         toast.success("Channel created successfully");
-        // TODO: Redirect to new channel
+        handleClose();
+      },
+      onError: () => {
+        toast.error("Failed to create a channel");
       }
     })
   }
