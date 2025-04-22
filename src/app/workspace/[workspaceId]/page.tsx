@@ -25,7 +25,7 @@ const WorkspacePage = () => {
   const isAdmin = useMemo(() => member?.role === "admin", [member?.role]);
 
   useEffect(() => {
-    if(workspaceLoading || channelsLoading || !isMemberLoading || !workspace) return;
+    if(workspaceLoading || channelsLoading || isMemberLoading || !workspace) return;
 
     if(channelId){
       router.push(`/workspace/${workspaceId}/channel/${channelId}`);
@@ -46,7 +46,7 @@ const WorkspacePage = () => {
     ])
 
 
-  if(workspaceLoading || channelsLoading){
+  if(workspaceLoading || channelsLoading || isMemberLoading){
     return(
       <div className="h-full flex-1 flex items-center justify-center flex-col-gap-2">
         <Loader className="size-6 animate-spin text-muted-foreground" />
@@ -54,7 +54,7 @@ const WorkspacePage = () => {
     )
   };
 
-  if(!workspace) {
+  if(!workspace || !member) {
     return (
       <div className="h-full flex-1 flex items-center justify-center flex-col-gap-2">
         <TriangleAlert className="size-6 text-muted-foreground" />
@@ -64,7 +64,7 @@ const WorkspacePage = () => {
   }
 
   return (
-    <div className="h-full flex-1 flex items-center justify-center flex-col-gap-2">
+    <div className="h-full flex-1 flex items-center justify-center flex-col gap-2">
       <TriangleAlert className="size-6 text-muted-foreground" />
       <span className="text-sm text-muted-foreground">No channel found</span>
     </div>
