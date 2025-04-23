@@ -19,7 +19,6 @@ type CreateMessageValues = {
   workspaceId: Id<"workspaces">,
   body: string,
   image: Id<"_storage"> | undefined,
-
 }
 
 export const ChatInput = ({ placeholder }: ChatInputProps) => {
