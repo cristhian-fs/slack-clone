@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧪 Slack Clone – Study Project
 
-## Getting Started
+## Description
 
-First, run the development server:
+This is a Slack-inspired **study project** built using modern full-stack technologies. It replicates the core features of a real-time team communication platform, enabling messaging, reactions, threads, user roles, and more. The goal is to deepen understanding of scalable architecture, real-time data handling, and clean UI design.
+
+---
+
+## 🧰 Tech Stack
+
+- **Next.js 14** – App Router, Server Components
+- **Tailwind CSS** – Utility-first styling
+- **Shadcn UI** – Accessible component library
+- **Convex** – Real-time backend (database + functions)
+- **NextAuth v5** – Authentication and session management
+- **Vercel** – Deployment platform
+- React Hook Form
+- Zod para validação
+- TypeScript
+
+---
+
+## 💡 Features
+
+### 📡 Real-Time Messaging
+- Live updates on messages, threads, and reactions
+- Instant typing indicators (optional)
+
+### 👍 Reactions
+- React to messages with emojis
+- Dynamic updates with optimistic UI
+
+### 🧵 Threads
+- Reply to specific messages
+- View threaded conversations contextually
+
+### ✏️ Message Editing
+- Edit previously sent messages
+- Sync updates in real-time
+
+### 🗑️ Message Deletion
+- Delete messages with permission control
+- Soft delete optional for future undo features
+
+### 🔐 Role-Based Access Control (RBAC)
+- Admin and member roles
+- Restricted access to management features
+
+### 🖼️ Image Attachments
+- Upload and send images in chat
+- Preview inline with messages
+
+### 🔒 Authentication
+- Secure login with NextAuth v5
+- OAuth and credentials provider support
+
+### 📺 Channels
+- Create and manage public or private channels
+
+### 🏢 Workspaces
+- Organize conversations by workspace
+- Join via invite code
+
+### ✉️ Invite System
+- Generate invite codes for others to join workspaces
+
+### 💬 Direct Messaging
+- One-on-one private conversations
+- Persistent history and real-time updates
+
+### 👥 User Profiles
+- View and update user details
+
+---
+
+## 🚀 Getting Started
+
+To run locally:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+# Install dependencies
+bun install
+
+# Start the dev server
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+In another terminal, run the following command to init the convex dev:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+bunx convex dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Make sure to configure your .env file with the necessary environment variables for Convex and NextAuth.
 
-## Learn More
+## 📦 Deployment
+This app is deployed on Vercel, with automatic CI/CD integration.
 
-To learn more about Next.js, take a look at the following resources:
+## 🎯 Purpose
+This is a learning-focused project created to explore full-stack development with real-time features. It serves as a personal deep dive into the architecture of collaborative platforms like Slack.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🙌 Credits
+This project was based on the Slack Clone Tutorial from [Code with antonio](codewithantonio.com)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Built using:
 
-## Deploy on Vercel
+- [Convex](https://www.convex.dev/)
+- [Next.js](https://nextjs.org/)
+- [Shadcn UI](https://ui.shadcn.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Vercel](https://vercel.com/)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
